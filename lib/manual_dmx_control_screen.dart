@@ -18,31 +18,47 @@ class ManualDmxControlScreen extends StatefulWidget {
 }
 
 class _ManualDmxControlScreenState extends State<ManualDmxControlScreen> {
+  List<int> channelValues = List.filled(256, 0);
+  bool sent = false;
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('DMX control')),
       body: Center(
-        child: Column(children: [
-          ElevatedButton(
-            child: Text('Turn off LED'),
-            onPressed: () {
-              Uint8List outputData = Uint8List.fromList(ascii.encode('0'));
-              //[99, 48, 118, 50, 53, 53, 10]
+        child: ListView.builder(
+          itemCount: channelValues.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Channel ${index + 1}:'),
+              subtitle: Slider(
+                min: 0,
+                max: 255,
+                divisions: 256,
+                value: channelValues[index].toDouble(),
+                onChanged: (double newValue) {
+                  setState(() {
+                    if (channelValues[index] == newValue) {
+                      return;
+                    }
+                    channelValues[index] = newValue.toInt();
+                    if (counter == 0) {
+                      Uint8List outputData =
+                          Uint8List.fromList([index + 1, channelValues[index]]);
+                      //[99, 48, 118, 50, 53, 53, 10]
 
-              widget.arduinoConnection.output.add(outputData);
-            },
-          ),
-          ElevatedButton(
-            child: Text('Turn on LED'),
-            onPressed: () {
-              Uint8List outputData = Uint8List.fromList(ascii.encode('1'));
-              //[99, 48, 118, 50, 53, 53, 10]
-
-              widget.arduinoConnection.output.add(outputData);
-            },
-          ),
-        ]),
+                      widget.arduinoConnection.output.add(outputData);
+                      //sent = true;
+                      print('update');
+                    }
+                    counter = (counter + 1) % 1;
+                  });
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
