@@ -14,7 +14,8 @@
 
 #include <DmxSimple.h>
 
-void setup() {
+void setup()
+{
   /* The most common pin for DMX output is pin 3, which DmxSimple
   ** uses by default. If you need to change that, do it here. */
   DmxSimple.usePin(4);
@@ -24,32 +25,36 @@ void setup() {
   ** easily change the number of channels sent here. If you don't
   ** do this, DmxSimple will set the maximum channel number to the
   ** highest channel you DmxSimple.write() to. */
-  //DmxSimple.maxChannel(4);
+  // DmxSimple.maxChannel(4);
 }
 
-void loop() {
+void loop()
+{
   int brightness;
   /* Simple loop to ramp up brightness */
-  for (brightness = 0; brightness <= 255; brightness++) {
-    
+  for (brightness = 0; brightness <= 255; brightness++)
+  {
+
     /* Update DMX channel 1 to new brightness */
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
       DmxSimple.write(i, brightness);
     }
-    
+
     /* Small delay to slow down the ramping */
     delay(20);
   }
 
-  for (brightness = 255; brightness > 0; brightness--) {
-    
+  for (brightness = 255; brightness > 0; brightness--)
+  {
+
     /* Update DMX channel 1 to new brightness */
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 3; i++)
+    {
       DmxSimple.write(i, brightness);
     }
-    
+
     /* Small delay to slow down the ramping */
     delay(20);
   }
-
 }
