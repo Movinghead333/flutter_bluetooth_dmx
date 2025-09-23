@@ -5,12 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 
 class ManualDmxControlScreen extends StatefulWidget {
-  final BluetoothConnection arduinoConnection;
+  final FlutterBluetoothClassic bluetooth;
 
-  const ManualDmxControlScreen({required this.arduinoConnection, Key? key})
+  const ManualDmxControlScreen({required this.bluetooth, Key? key})
       : super(key: key);
 
   @override
@@ -44,13 +45,12 @@ class _ManualDmxControlScreenState extends State<ManualDmxControlScreen> {
                     }
                     channelValues[index] = newValue.toInt();
                     if (counter == 0) {
-                      Uint8List outputData =
-                          Uint8List.fromList([index + 1, channelValues[index]]);
-                      //[99, 48, 118, 50, 53, 53, 10]
+                      String message = '<${index + 1},${channelValues[index]}>';
 
-                      widget.arduinoConnection.output.add(outputData);
-                      //sent = true;
-                      print('update');
+                      widget.bluetooth
+                          .sendData(List<int>.from(message.codeUnits));
+
+                      debugPrint('Sent: $message');
                     }
                     counter = (counter + 1) % 1;
                   });
