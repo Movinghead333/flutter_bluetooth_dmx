@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:flutter_bluetooth_dmx/device_based_dmx_universe_controller_screen.dart';
+import 'package:flutter_bluetooth_dmx/dmx_Controller_provider.dart';
 import 'package:flutter_bluetooth_dmx/manual_dmx_control_screen.dart';
+import 'package:provider/provider.dart';
 
 class BluetoothScreen extends StatefulWidget {
   const BluetoothScreen({super.key});
@@ -22,11 +25,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
   StreamSubscription<BluetoothData>? _dataSubscription;
   StreamSubscription<BluetoothState>? _stateSubscription;
+  late DmxControllerProvider model;
 
   @override
   void initState() {
     super.initState();
-    _bluetooth = FlutterBluetoothClassic();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bluetooth = Provider.of<DmxControllerProvider>(context).bluetooth;
     _initBluetooth();
   }
 
@@ -176,9 +185,20 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ManualDmxControlScreen(
-                    bluetooth: _bluetooth,
-                  ),
+                  builder: (context) => ManualDmxControlScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_display_rounded),
+            tooltip: 'Manual DMX Control',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DeviceBasedDmxUniverseControllerScreen(),
                 ),
               );
             },
