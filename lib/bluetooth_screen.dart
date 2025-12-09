@@ -91,15 +91,17 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
       });
 
       // Show connection status
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(connectionState.isConnected
-              ? 'Connected to ${_connectedDevice?.name}'
-              : 'Disconnected: ${connectionState.status}'),
-          backgroundColor:
-              connectionState.isConnected ? Colors.green : Colors.red,
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(connectionState.isConnected
+                ? 'Connected to ${_connectedDevice?.name}'
+                : 'Disconnected: ${connectionState.status}'),
+            backgroundColor:
+                connectionState.isConnected ? Colors.green : Colors.red,
+          ),
+        );
+      }
     });
 
     // Listen for incoming data

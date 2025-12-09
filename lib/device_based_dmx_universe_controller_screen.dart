@@ -41,7 +41,7 @@ class _DeviceBasedDmxUniverseControllerScreenState
 
                     if (!asyncSnapshot.hasData ||
                         !dmxDevicesAsyncSnapshot.hasData) {
-                      return Center(child: const CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     List<DmxDevice> dmxDevices = dmxDevicesAsyncSnapshot.data!;
@@ -57,9 +57,9 @@ class _DeviceBasedDmxUniverseControllerScreenState
                             });
                           },
                           title: Text(
-                              '${dmxDevices[index].name} (A: ${dmxDevices[index].startAdress}, C: ${dmxDevices[index].numChannels})'),
+                              '${dmxDevices[index].specification.name} (A: ${dmxDevices[index].startAdress}, C: ${dmxDevices[index].specification.numChannels})'),
                           children: List.generate(
-                            dmxDevices[index].numChannels,
+                            dmxDevices[index].specification.numChannels,
                             (localChannelIndex) {
                               int channelNumber =
                                   dmxDevices[index].startAdress +
@@ -71,9 +71,9 @@ class _DeviceBasedDmxUniverseControllerScreenState
                                       context: context,
                                       builder: (_) => AlertDialog(
                                             title: Text(
-                                                '${dmxDevices[index].channelInfos[localChannelIndex].channelName}'),
+                                                dmxDevices[index].specification.channelInfos[localChannelIndex].channelName),
                                             content: Text(
-                                                '${dmxDevices[index].channelInfos[localChannelIndex].description}'),
+                                                dmxDevices[index].specification.channelInfos[localChannelIndex].description),
                                             actions: [
                                               TextButton(
                                                   onPressed: () {
@@ -84,7 +84,7 @@ class _DeviceBasedDmxUniverseControllerScreenState
                                           ));
                                 },
                                 title: Text(
-                                    '${dmxDevices[index].channelInfos[localChannelIndex].channelName}: ${channelValues[channelNumber]}'),
+                                    '${dmxDevices[index].specification.channelInfos[localChannelIndex].channelName}: ${channelValues[channelNumber]}'),
                                 subtitle: Slider(
                                   min: 0,
                                   max: 255,

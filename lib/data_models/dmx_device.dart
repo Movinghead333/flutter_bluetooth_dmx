@@ -1,15 +1,11 @@
-import 'package:flutter_bluetooth_dmx/data_models/channel_info.dart';
+import 'package:flutter_bluetooth_dmx/data_models/dmx_device_specification.dart';
 
 class DmxDevice {
-  String name;
   int startAdress;
-  int numChannels;
-  List<ChannelInfo> channelInfos;
+  final DmxDeviceSpecification specification;
 
   DmxDevice({
-    required this.name,
     required this.startAdress,
-    required this.numChannels,
-    required this.channelInfos,
+    required this.specification,
   });
 }
