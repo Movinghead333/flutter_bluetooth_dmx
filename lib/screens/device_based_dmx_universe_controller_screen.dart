@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_dmx/data_models/dmx_device.dart';
-import 'package:flutter_bluetooth_dmx/dmx_Controller_provider.dart';
+import 'package:flutter_bluetooth_dmx/providers/dmx_Controller_provider.dart';
 import 'package:provider/provider.dart';
 
 class DeviceBasedDmxUniverseControllerScreen extends StatefulWidget {
@@ -70,10 +70,14 @@ class _DeviceBasedDmxUniverseControllerScreenState
                                   showDialog(
                                       context: context,
                                       builder: (_) => AlertDialog(
-                                            title: Text(
-                                                dmxDevices[index].specification.channelInfos[localChannelIndex].channelName),
-                                            content: Text(
-                                                dmxDevices[index].specification.channelInfos[localChannelIndex].description),
+                                            title: Text(dmxDevices[index]
+                                                .specification
+                                                .channelInfos[localChannelIndex]
+                                                .channelName),
+                                            content: Text(dmxDevices[index]
+                                                .specification
+                                                .channelInfos[localChannelIndex]
+                                                .description),
                                             actions: [
                                               TextButton(
                                                   onPressed: () {
