@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
-import 'package:flutter_bluetooth_dmx/device_based_dmx_universe_controller_screen.dart';
-import 'package:flutter_bluetooth_dmx/dmx_Controller_provider.dart';
-import 'package:flutter_bluetooth_dmx/manual_dmx_control_screen.dart';
+import 'package:flutter_bluetooth_dmx/screens/device_based_dmx_universe_controller_screen.dart';
+import 'package:flutter_bluetooth_dmx/providers/dmx_Controller_provider.dart';
+import 'package:flutter_bluetooth_dmx/screens/manual_dmx_control_screen.dart';
 import 'package:provider/provider.dart';
 
 class BluetoothScreen extends StatefulWidget {
@@ -75,6 +75,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     _connectionSubscription =
         _bluetooth.onConnectionChanged.listen((connectionState) {
       setState(() {
+        debugPrint('Connection state changed: $connectionState');
         _isConnected = connectionState.isConnected;
         if (connectionState.isConnected) {
           _connectedDevice = _devices.firstWhere(
@@ -136,7 +137,14 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
 
   Future<void> _disconnect() async {
     try {
-      await _bluetooth.disconnect();
+      if (await _bluetooth.disconnect()) {
+        setState(() {
+          _isConnected = false;
+          _connectedDevice = null;
+        });
+      } else {
+        _showError('Disconnect did not succeed');
+      }
     } catch (e) {
       _showError('Disconnect error: $e');
     }

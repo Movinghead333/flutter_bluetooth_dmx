@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bluetooth_dmx/dmx_Controller_provider.dart';
+import 'package:flutter_bluetooth_dmx/providers/dmx_Controller_provider.dart';
 import 'package:provider/provider.dart';
 
 class ManualDmxControlScreen extends StatefulWidget {

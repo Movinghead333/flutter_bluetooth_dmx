@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_dmx/dmx_Controller_provider.dart';
-import 'package:flutter_bluetooth_dmx/bluetooth_screen.dart';
+import 'package:flutter_bluetooth_dmx/providers/dmx_Controller_provider.dart';
+import 'package:flutter_bluetooth_dmx/screens/bluetooth_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
