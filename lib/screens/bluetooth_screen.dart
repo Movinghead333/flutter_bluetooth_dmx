@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter_bluetooth_dmx/screens/device_based_dmx_universe_controller_screen.dart';
 import 'package:flutter_bluetooth_dmx/providers/dmx_Controller_provider.dart';
 import 'package:flutter_bluetooth_dmx/screens/manual_dmx_control_screen.dart';
@@ -60,6 +61,21 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
     if (isSupported && isEnabled) {
       await _loadDevices();
       _setupListeners();
+      // Try to reconnect to last used device if available (stored via GetStorage)
+      try {
+        final box = GetStorage();
+        final lastAddress = box.read<String>('last_device_address');
+        if (lastAddress != null && !_isConnected && _devices.isNotEmpty) {
+          final candidates =
+              _devices.where((device) => device.address == lastAddress);
+          if (candidates.isNotEmpty) {
+            // Attempt to reconnect silently
+            await _connectToDevice(candidates.first);
+          }
+        }
+      } catch (e) {
+        debugPrint('Error while trying to reconnect to last device: $e');
+      }
     }
   }
 
@@ -86,6 +102,12 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
               paired: false,
             ),
           );
+          // Persist last connected device address using GetStorage
+          try {
+            GetStorage().write('last_device_address', connectionState.deviceAddress);
+          } catch (e) {
+            debugPrint('Failed to persist last device address: $e');
+          }
         } else {
           _connectedDevice = null;
         }
